@@ -29,36 +29,42 @@ const DressesApp = () => {
           textDecoration: returned ? "line-through" : "none"
         }}
       >
-        {name}
+        {"Dress: " + name + " | size: " + size}
       </li>
     );
   };
 
   const DressForm = ({ dressAction }) => {
     // variable to hold a reference to the input
-    let dressInput;
+    let dressNameInput;
+    let dressSizeInput;
 
     const handleSubmit = (event) => {
       event.preventDefault();
-      dressAction(dressInput.value);
-      dressInput.value = "";
+      dressAction(dressNameInput.value, dressSizeInput.value);
+      dressNameInput.value = "";
+      dressSizeInput.value = "";
     };
 
     return (
       <form onSubmit={handleSubmit}>
-        <label>
-          <input ref={(r) => (dressInput = r)} type="text" />
-        </label>
-        <input type="submit" value="Add a dress" />
+        <label>Dress name:</label>
+        <input ref={(r) => (dressNameInput = r)} type="text" />
+        <br></br>
+        <label>Dress size:</label>
+        <input ref={(r) => (dressSizeInput = r)} type="text" />
+        <br></br>
+        <input type="submit" value="Submit" />
       </form>
     );
   };
 
-  const createDress = (name) => {
+  const createDress = (name, size) => {
     updateState((draft) => {
       draft.dresses.push({
         id: draft.dresses.length,
         name: name,
+        size: size,
         returned: false
       });
     });
@@ -109,9 +115,10 @@ const DressesApp = () => {
   // to uncomment, remove the enclosing '{/*' and '*/}'
   return (
     <div>
+      <h3> Add a Dress </h3>
       {<DressForm dressAction={createDress} />}
-      <h3> Dresses </h3>
 
+      <h3> Dresses </h3>
       {
         <ReturnedFilter
           filterType={appState.filterType}
@@ -123,6 +130,7 @@ const DressesApp = () => {
           <Dress
             key={dress.id}
             name={dress.name}
+            size={dress.size}
             returned={dress.returned}
             toggleDress={() => toggleDress(dress.id)}
           />
