@@ -82,7 +82,7 @@ const DressesApp = () => {
 
   const ReturnedFilter = ({ filterType, setFilterType }) => (
     <span>
-      {["all", "returned", "rented"].map((status, i) => {
+      {["all", "available", "rented"].map((status, i) => {
         return (
           <button
             onClick={() => setFilterType(status)}
@@ -98,9 +98,9 @@ const DressesApp = () => {
   const filteredDresses = () => {
     if (appState.filterType === "all") {
       return appState.dresses;
-    } else if (appState.filterType === "returned") {
-      return appState.dresses.filter((dress) => dress.returned === true);
     } else if (appState.filterType === "rented") {
+      return appState.dresses.filter((dress) => dress.returned === true);
+    } else if (appState.filterType === "available") {
       return appState.dresses.filter((dress) => dress.returned === false);
     }
   };
