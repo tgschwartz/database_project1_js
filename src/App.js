@@ -15,7 +15,8 @@ const DressesApp = () => {
         id: 8,
         first_name: "Tova",
         last_name: "Schwartz",
-        size: 14,
+        phone: '1234321',
+        size: 1,
         wedding_date: "04/03/2021"
       }
     ]
@@ -34,6 +35,14 @@ const DressesApp = () => {
     );
   };
 
+  const Customer = ({ id, first_name, last_name, phone, size, wedding_date}) => {
+    return (
+      <li>
+        {"ID: " + id + ", Name: " + first_name + " " + last_name}
+      </li>
+    );
+  };
+
   const DressForm = ({ dressAction }) => {
     // variable to hold a reference to the input
     let dressNameInput;
@@ -48,14 +57,51 @@ const DressesApp = () => {
 
     return (
       <form onSubmit={handleSubmit}>
-        <label>Dress name:</label>
-        <input ref={(r) => (dressNameInput = r)} type="text" />
+        <input ref={(r) => (dressNameInput = r)} type="text" placeholder="Dress Name"/>
         <br></br>
-        <label>Dress size:</label>
-        <input ref={(r) => (dressSizeInput = r)} type="text" />
+        <input ref={(r) => (dressSizeInput = r)} type="text" placeholder="Dress Size"/>
         <br></br>
         <input type="submit" value="Submit" />
       </form>
+    );
+  };
+
+  const CustomerForm = ({ customerAction }) => {
+    // variable to hold a reference to the input
+    let customerFirstNameInput;
+    let customerLastNameInput;
+    let customerPhoneInput;
+    let customerSizeInput;
+    let customerDateInput;
+
+    const handleSubmitCustomer = (event) => {
+      event.preventDefault();
+      customerAction(customerFirstNameInput.value,
+                     customerLastNameInput.value,
+                     customerPhoneInput.value,
+                     customerSizeInput.value,
+                     customerDateInput.value);
+      customerFirstNameInput.value = "";
+      customerLastNameInput.value = "";
+      customerPhoneInput.value = "";
+      customerSizeInput.value = "";
+      customerDateInput.value = "";
+    };
+
+    return (
+      <form onSubmit={handleSubmitCustomer}>
+      <input ref={(r) => (customerFirstNameInput = r)} type="text" placeholder="First Name"/>
+      <br></br>
+      <input ref={(r) => (customerLastNameInput = r)} type="text" placeholder="Last Name"/>
+      <br></br>
+      <input ref={(r) => (customerPhoneInput = r)} type="text" placeholder="Phone Number"/>
+      <br></br>
+      <input ref={(r) => (customerSizeInput = r)} type="text" placeholder="Size"/>
+      <br></br>
+      <input ref={(r) => (customerDateInput = r)} type="text" placeholder="Wedding Date: MM/DD/YYYY"/>
+      <br></br>
+      <input type="submit" value="Submit" />
+    </form>     
     );
   };
 
@@ -66,6 +112,19 @@ const DressesApp = () => {
         name: name,
         size: size,
         returned: false
+      });
+    });
+  };
+
+  const createCustomer = (first_name, last_name, phone, size, wedding_date) => {
+    updateState((draft) => {
+      draft.customers.push({
+        id: draft.dresses.length,
+        first_name: first_name,
+        last_name: last_name,
+        phone: phone,
+        size: size,
+        wedding_date: wedding_date
       });
     });
   };
@@ -128,12 +187,28 @@ const DressesApp = () => {
       <ul>
         {filteredDresses().map((dress) => (
           <Dress
-            key={dress.id}
+            id={dress.id}
             name={dress.name}
             size={dress.size}
             returned={dress.returned}
             toggleDress={() => toggleDress(dress.id)}
           />
+        ))}
+      </ul>
+
+      <h3> Add a Customer </h3>
+      {<CustomerForm customerAction={createCustomer} />}
+
+      <h3> Customers </h3>
+      <ul>
+        {appState.customers.map((customer) => (
+          <Customer
+            id={customer.id}
+            first_name={customer.first_name}
+            last_name={customer.last_name}
+            phone={customer.phone}
+            size={customer.size}
+            wedding_date={customer.wedding_date}/>
         ))}
       </ul>
     </div>
